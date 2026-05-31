@@ -25,19 +25,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mensaje = "El precio debe ser mayor que cero.";
     } else {
         if (isset($_FILES["imagen"]) && $_FILES["imagen"]["error"] == 0) {
-            $carpeta_destino = "img/productos/";
+            $carpeta_destino = __DIR__ . "/img/productos/";
             $extension = strtolower(pathinfo($_FILES["imagen"]["name"], PATHINFO_EXTENSION));
-            $extensiones_permitidas = array("jpg", "jpeg", "png", "gif");
+            $extensiones_permitidas = array("jpg", "jpeg", "png", "gif", "webp");
+
+            if (!is_dir($carpeta_destino)) {
+                mkdir($carpeta_destino, 0777, true);
+            }
 
             if (in_array($extension, $extensiones_permitidas)) {
-                $nombre_imagen = time() . "_" . basename($_FILES["imagen"]["name"]);
+                $nombre_imagen = time() . "_producto." . $extension;
                 $ruta_imagen = $carpeta_destino . $nombre_imagen;
 
                 if (!move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_imagen)) {
                     $mensaje = "No se pudo subir la imagen.";
                 }
             } else {
-                $mensaje = "La imagen debe ser JPG, JPEG, PNG o GIF.";
+                $mensaje = "La imagen debe ser JPG, JPEG, PNG, GIF o WEBP.";
             }
         }
 
@@ -160,3 +164,4 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
     </footer>
 </body>
 </html>
+
