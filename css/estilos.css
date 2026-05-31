@@ -1,0 +1,262 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f4f6f8;
+    color: #222;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.contenedor {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+}
+
+.encabezado {
+    background-color: #1f2937;
+    color: #fff;
+    padding: 18px 0;
+}
+
+.barra-navegacion {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    list-style: none;
+}
+
+.menu a {
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
+.menu a:hover {
+    background-color: #374151;
+}
+
+.seccion {
+    padding: 36px 0;
+}
+
+.titulo {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.texto {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.boton,
+button,
+input[type="submit"] {
+    background-color: #2563eb;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    padding: 10px 16px;
+}
+
+.boton:hover,
+button:hover,
+input[type="submit"]:hover {
+    background-color: #1d4ed8;
+}
+
+.boton-secundario {
+    background-color: #4b5563;
+}
+
+.boton-secundario:hover {
+    background-color: #374151;
+}
+
+.boton-peligro {
+    background-color: #dc2626;
+}
+
+.boton-peligro:hover {
+    background-color: #b91c1c;
+}
+
+.formulario {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 18px;
+    padding: 22px;
+}
+
+.campo {
+    margin-bottom: 16px;
+}
+
+.campo label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.campo input,
+.campo textarea,
+.campo select {
+    border: 1px solid #cfd4dc;
+    border-radius: 6px;
+    font-size: 15px;
+    padding: 10px;
+    width: 100%;
+}
+
+.campo textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.mensaje {
+    border-radius: 6px;
+    margin-bottom: 16px;
+    padding: 12px;
+}
+
+.mensaje-exito {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.mensaje-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.grid-productos {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin-top: 24px;
+}
+
+.tarjeta-producto {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tarjeta-producto img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+}
+
+.contenido-producto {
+    padding: 16px;
+}
+
+.precio {
+    color: #047857;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.etiqueta {
+    background-color: #e5e7eb;
+    border-radius: 999px;
+    color: #374151;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 4px 4px 0;
+    padding: 4px 8px;
+}
+
+.filtros {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    margin-top: 20px;
+    padding: 16px;
+}
+
+.tabla {
+    background-color: #fff;
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.tabla th,
+.tabla td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla th {
+    background-color: #e5e7eb;
+}
+
+.total-carrito {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 20px;
+    padding: 18px;
+    text-align: right;
+}
+
+.pie {
+    background-color: #1f2937;
+    color: #fff;
+    margin-top: 40px;
+    padding: 18px 0;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .barra-navegacion {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .titulo {
+        font-size: 24px;
+    }
+
+    .tabla {
+        font-size: 14px;
+    }
+}
