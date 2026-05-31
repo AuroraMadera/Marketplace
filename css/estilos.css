@@ -161,9 +161,9 @@ input[type="submit"]:hover {
 
 .grid-productos {
     display: grid;
-    gap: 18px;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    margin-top: 24px;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    margin-top: 20px;
 }
 
 .tarjeta-producto {
@@ -176,6 +176,7 @@ input[type="submit"]:hover {
 .tarjeta-producto img {
     aspect-ratio: 1 / 1;
     background-color: #eef1f5;
+    height: 150px;
     object-fit: cover;
     object-position: center;
     width: 100%;
@@ -194,14 +195,21 @@ input[type="submit"]:hover {
 }
 
 .contenido-producto {
-    padding: 16px;
+    padding: 12px;
+}
+
+.contenido-producto h2,
+.contenido-producto h3 {
+    font-size: 17px;
+    line-height: 1.25;
+    margin-bottom: 6px;
 }
 
 .precio {
     color: #047857;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: bold;
-    margin: 8px 0;
+    margin: 6px 0;
 }
 
 .etiqueta {
@@ -274,4 +282,5 @@ input[type="submit"]:hover {
         font-size: 14px;
     }
 }
+
 
