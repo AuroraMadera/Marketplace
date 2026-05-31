@@ -174,8 +174,22 @@ input[type="submit"]:hover {
 }
 
 .tarjeta-producto img {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
+    background-color: #eef1f5;
     object-fit: cover;
+    object-position: center;
+    width: 100%;
+}
+
+.formulario > img {
+    aspect-ratio: 1 / 1;
+    background-color: #eef1f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 16px 0;
+    max-width: 420px;
+    object-fit: cover;
+    object-position: center;
     width: 100%;
 }
 
@@ -260,3 +274,4 @@ input[type="submit"]:hover {
         font-size: 14px;
     }
 }
+
