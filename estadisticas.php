@@ -54,7 +54,6 @@ $producto_mejor_calificado = $conexion->query(
                     <li><a href="index.php">Inicio</a></li>
                     <li><a href="productos.php">Productos</a></li>
                     <li><a href="estadisticas.php">Estadisticas</a></li>
-                    <li><a href="pruebas.php">Pruebas</a></li>
                     <li><a href="carrito.php">Carrito</a></li>
 
                     <?php if (isset($_SESSION["id_usuario"])): ?>
@@ -151,3 +150,4 @@ $producto_mejor_calificado = $conexion->query(
     <script src="js/script.js"></script>
 </body>
 </html>
+

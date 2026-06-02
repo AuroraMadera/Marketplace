@@ -66,7 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li><a href="index.php">Inicio</a></li>
                     <li><a href="productos.php">Productos</a></li>
                     <li><a href="estadisticas.php">Estadisticas</a></li>
-                    <li><a href="pruebas.php">Pruebas</a></li>
                     <li><a href="login.php">Iniciar sesion</a></li>
                 </ul>
             </nav>
@@ -123,4 +122,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="js/script.js"></script>
 </body>
 </html>
+
 
