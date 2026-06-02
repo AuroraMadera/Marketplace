@@ -236,7 +236,9 @@ input[type="submit"]:hover {
 .tabla {
     background-color: #fff;
     border-collapse: collapse;
+    display: block;
     margin-top: 20px;
+    overflow-x: auto;
     width: 100%;
 }
 
@@ -245,6 +247,7 @@ input[type="submit"]:hover {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
+    white-space: nowrap;
 }
 
 .tabla th {
@@ -284,3 +287,35 @@ input[type="submit"]:hover {
 }
 
 
+
+.grid-estadisticas {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    margin-top: 20px;
+}
+
+.tarjeta-estadistica {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.tarjeta-estadistica span {
+    color: #555;
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.tarjeta-estadistica strong {
+    color: #111827;
+    display: block;
+    font-size: 26px;
+}
+
+.lista-check {
+    line-height: 1.8;
+    margin-left: 22px;
+}

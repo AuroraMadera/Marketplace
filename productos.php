@@ -8,19 +8,29 @@ $estado = isset($_GET["estado"]) ? $_GET["estado"] : "";
 $precio_minimo = isset($_GET["precio_minimo"]) ? $_GET["precio_minimo"] : "";
 $precio_maximo = isset($_GET["precio_maximo"]) ? $_GET["precio_maximo"] : "";
 
-$sql = "SELECT productos.*, categorias.nombre AS categoria, usuarios.nombre AS vendedor
+$sql = "SELECT productos.*, categorias.nombre AS categoria, usuarios.nombre AS vendedor,
+               calificaciones.promedio AS promedio_calificacion,
+               calificaciones.total AS total_calificaciones
         FROM productos
         INNER JOIN categorias ON productos.id_categoria = categorias.id_categoria
         INNER JOIN usuarios ON productos.id_usuario = usuarios.id_usuario
+        LEFT JOIN (
+            SELECT id_producto, AVG(calificacion) AS promedio, COUNT(*) AS total
+            FROM comentarios
+            GROUP BY id_producto
+        ) AS calificaciones ON productos.id_producto = calificaciones.id_producto
         WHERE productos.disponible = 1";
 
 $parametros = array();
 $tipos = "";
 
 if (!empty($busqueda)) {
-    $sql .= " AND productos.nombre LIKE ?";
-    $parametros[] = "%" . $busqueda . "%";
-    $tipos .= "s";
+    $sql .= " AND (productos.nombre LIKE ? OR productos.descripcion LIKE ? OR usuarios.nombre LIKE ?)";
+    $valor_busqueda = "%" . $busqueda . "%";
+    $parametros[] = $valor_busqueda;
+    $parametros[] = $valor_busqueda;
+    $parametros[] = $valor_busqueda;
+    $tipos .= "sss";
 }
 
 if (!empty($id_categoria)) {
@@ -78,6 +88,8 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                 <ul class="menu">
                     <li><a href="index.php">Inicio</a></li>
                     <li><a href="productos.php">Productos</a></li>
+                    <li><a href="estadisticas.php">Estadisticas</a></li>
+                    <li><a href="pruebas.php">Pruebas</a></li>
                     <li><a href="carrito.php">Carrito</a></li>
 
                     <?php if (isset($_SESSION["id_usuario"])): ?>
@@ -182,6 +194,11 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                                 <p class="precio">$<?php echo number_format($producto["precio"], 2); ?></p>
                                 <span class="etiqueta"><?php echo htmlspecialchars($producto["categoria"]); ?></span>
                                 <span class="etiqueta"><?php echo htmlspecialchars($producto["estado"]); ?></span>
+                                <?php if ($producto["total_calificaciones"] > 0): ?>
+                                    <span class="etiqueta">Calificacion <?php echo number_format($producto["promedio_calificacion"], 1); ?>/5</span>
+                                <?php else: ?>
+                                    <span class="etiqueta">Sin calificaciones</span>
+                                <?php endif; ?>
                                 <p class="texto">
                                     Vendedor: <?php echo htmlspecialchars($producto["vendedor"]); ?>
                                 </p>
@@ -203,5 +220,8 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
             <p>Proyecto escolar - Marketplace local sin pagos reales</p>
         </div>
     </footer>
+    <script src="js/script.js"></script>
 </body>
 </html>
+
+

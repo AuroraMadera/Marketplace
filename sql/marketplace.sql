@@ -90,3 +90,28 @@ INSERT INTO categorias (nombre) VALUES
 ('Deportes'),
 ('Juguetes'),
 ('Otros');
+
+-- Datos simulados para demostracion del marketplace.
+-- Password de usuarios de prueba: 123456
+INSERT INTO usuarios (nombre, correo, password, telefono) VALUES
+('Ana Lopez', 'ana.demo@marketplace.local', '$2y$10$NMGC8V8qQlMB34vlZFxMgOztJ95kVRQQyX.zNBA2j/F7h3ZJ7Ev.y', '9991112233'),
+('Carlos Perez', 'carlos.demo@marketplace.local', '$2y$10$NMGC8V8qQlMB34vlZFxMgOztJ95kVRQQyX.zNBA2j/F7h3ZJ7Ev.y', '9992223344'),
+('Maria Gomez', 'maria.demo@marketplace.local', '$2y$10$NMGC8V8qQlMB34vlZFxMgOztJ95kVRQQyX.zNBA2j/F7h3ZJ7Ev.y', '9993334455');
+
+INSERT INTO productos (id_usuario, id_categoria, nombre, descripcion, precio, estado, imagen, disponible) VALUES
+(1, 1, 'Celular Samsung usado', 'Celular en buen estado, ideal para uso escolar y redes sociales.', 2800.00, 'Usado', '', 1),
+(2, 2, 'Chamarra azul', 'Chamarra casual talla mediana, poco uso.', 350.00, 'Usado', '', 1),
+(3, 4, 'Libro de programacion', 'Libro basico para aprender logica y fundamentos de programacion.', 180.00, 'Usado', '', 1),
+(1, 3, 'Lampara de escritorio', 'Lampara LED para estudio con luz blanca.', 220.00, 'Nuevo', '', 1),
+(2, 5, 'Balon de futbol', 'Balon numero 5 para entrenamiento.', 160.00, 'Nuevo', '', 1),
+(3, 7, 'Mochila escolar', 'Mochila resistente con varios compartimentos.', 420.00, 'Usado', '', 1);
+
+INSERT INTO comentarios (id_producto, id_usuario, comentario, calificacion) VALUES
+(1, 2, 'Producto publicado con buena descripcion y precio justo.', 5),
+(1, 3, 'El vendedor responde rapido.', 4),
+(2, 1, 'La prenda se ve en buen estado.', 4),
+(3, 1, 'Util para clases de programacion.', 5),
+(4, 2, 'Buena opcion para estudiar en casa.', 5),
+(5, 3, 'Precio accesible para estudiantes.', 4),
+(6, 1, 'La mochila tiene buena capacidad.', 4);
+
