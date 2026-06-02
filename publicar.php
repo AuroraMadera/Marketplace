@@ -10,16 +10,22 @@ if (!isset($_SESSION["id_usuario"])) {
 $mensaje = "";
 $tipo_mensaje = "mensaje-error";
 
+if (isset($_GET["publicado"]) && $_GET["publicado"] == "1") {
+    $mensaje = "Producto publicado correctamente.";
+    $tipo_mensaje = "mensaje-exito";
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_usuario = $_SESSION["id_usuario"];
     $id_categoria = $_POST["id_categoria"];
     $nombre = trim($_POST["nombre"]);
     $descripcion = trim($_POST["descripcion"]);
     $precio = $_POST["precio"];
+    $ubicacion = trim($_POST["ubicacion"]);
     $estado = $_POST["estado"];
     $nombre_imagen = "";
 
-    if (empty($id_categoria) || empty($nombre) || empty($descripcion) || empty($precio) || empty($estado)) {
+    if (empty($id_categoria) || empty($nombre) || empty($descripcion) || empty($precio) || empty($ubicacion) || empty($estado)) {
         $mensaje = "Todos los campos son obligatorios.";
     } elseif ($precio <= 0) {
         $mensaje = "El precio debe ser mayor que cero.";
@@ -47,23 +53,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (empty($mensaje)) {
             $insertar = $conexion->prepare(
-                "INSERT INTO productos (id_usuario, id_categoria, nombre, descripcion, precio, estado, imagen)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO productos (id_usuario, id_categoria, nombre, descripcion, precio, ubicacion, estado, imagen)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
             );
             $insertar->bind_param(
-                "iissdss",
+                "iissdsss",
                 $id_usuario,
                 $id_categoria,
                 $nombre,
                 $descripcion,
                 $precio,
+                $ubicacion,
                 $estado,
                 $nombre_imagen
             );
 
             if ($insertar->execute()) {
-                $mensaje = "Producto publicado correctamente.";
-                $tipo_mensaje = "mensaje-exito";
+                header("Location: publicar.php?publicado=1");
+                exit;
             } else {
                 $mensaje = "No se pudo guardar el producto.";
             }
@@ -141,6 +148,11 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                 </div>
 
                 <div class="campo">
+                    <label for="ubicacion">Ubicacion o zona</label>
+                    <input type="text" id="ubicacion" name="ubicacion" placeholder="Ejemplo: Centro" required>
+                </div>
+
+                <div class="campo">
                     <label for="estado">Estado</label>
                     <select id="estado" name="estado" required>
                         <option value="">Selecciona el estado</option>
@@ -167,5 +179,4 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
     <script src="js/script.js"></script>
 </body>
 </html>
-
 

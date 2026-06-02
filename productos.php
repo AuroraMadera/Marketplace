@@ -4,9 +4,47 @@ require_once "conexion.php";
 
 $busqueda = isset($_GET["busqueda"]) ? trim($_GET["busqueda"]) : "";
 $id_categoria = isset($_GET["id_categoria"]) ? $_GET["id_categoria"] : "";
+$ubicacion = isset($_GET["ubicacion"]) ? trim($_GET["ubicacion"]) : "";
 $estado = isset($_GET["estado"]) ? $_GET["estado"] : "";
 $precio_minimo = isset($_GET["precio_minimo"]) ? $_GET["precio_minimo"] : "";
 $precio_maximo = isset($_GET["precio_maximo"]) ? $_GET["precio_maximo"] : "";
+$mensaje = "";
+$tipo_mensaje = "mensaje-error";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["agregar_carrito"])) {
+    if (!isset($_SESSION["id_usuario"])) {
+        header("Location: login.php");
+        exit;
+    }
+
+    $id_usuario = $_SESSION["id_usuario"];
+    $id_producto = (int) $_POST["id_producto"];
+
+    $consulta_carrito = $conexion->prepare(
+        "SELECT id_carrito, cantidad FROM carrito WHERE id_usuario = ? AND id_producto = ?"
+    );
+    $consulta_carrito->bind_param("ii", $id_usuario, $id_producto);
+    $consulta_carrito->execute();
+    $resultado_carrito = $consulta_carrito->get_result();
+
+    if ($resultado_carrito->num_rows > 0) {
+        $producto_carrito = $resultado_carrito->fetch_assoc();
+        $nueva_cantidad = $producto_carrito["cantidad"] + 1;
+
+        $actualizar = $conexion->prepare("UPDATE carrito SET cantidad = ? WHERE id_carrito = ?");
+        $actualizar->bind_param("ii", $nueva_cantidad, $producto_carrito["id_carrito"]);
+        $actualizar->execute();
+    } else {
+        $insertar = $conexion->prepare(
+            "INSERT INTO carrito (id_usuario, id_producto, cantidad) VALUES (?, ?, 1)"
+        );
+        $insertar->bind_param("ii", $id_usuario, $id_producto);
+        $insertar->execute();
+    }
+
+    $mensaje = "Producto agregado al carrito.";
+    $tipo_mensaje = "mensaje-exito";
+}
 
 $sql = "SELECT productos.*, categorias.nombre AS categoria, usuarios.nombre AS vendedor,
                calificaciones.promedio AS promedio_calificacion,
@@ -25,18 +63,25 @@ $parametros = array();
 $tipos = "";
 
 if (!empty($busqueda)) {
-    $sql .= " AND (productos.nombre LIKE ? OR productos.descripcion LIKE ? OR usuarios.nombre LIKE ?)";
+    $sql .= " AND (productos.nombre LIKE ? OR productos.descripcion LIKE ? OR categorias.nombre LIKE ? OR usuarios.nombre LIKE ?)";
     $valor_busqueda = "%" . $busqueda . "%";
     $parametros[] = $valor_busqueda;
     $parametros[] = $valor_busqueda;
     $parametros[] = $valor_busqueda;
-    $tipos .= "sss";
+    $parametros[] = $valor_busqueda;
+    $tipos .= "ssss";
 }
 
 if (!empty($id_categoria)) {
     $sql .= " AND productos.id_categoria = ?";
     $parametros[] = $id_categoria;
     $tipos .= "i";
+}
+
+if (!empty($ubicacion)) {
+    $sql .= " AND productos.ubicacion LIKE ?";
+    $parametros[] = "%" . $ubicacion . "%";
+    $tipos .= "s";
 }
 
 if (!empty($estado)) {
@@ -110,6 +155,12 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
             <h1 class="titulo">Catalogo de productos</h1>
             <p class="texto">Busca productos publicados por usuarios de tu comunidad.</p>
 
+            <?php if (!empty($mensaje)): ?>
+                <div class="mensaje <?php echo $tipo_mensaje; ?>">
+                    <?php echo htmlspecialchars($mensaje); ?>
+                </div>
+            <?php endif; ?>
+
             <form class="filtros" action="productos.php" method="GET">
                 <div class="campo">
                     <label for="busqueda">Buscar</label>
@@ -118,7 +169,7 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                         id="busqueda"
                         name="busqueda"
                         value="<?php echo htmlspecialchars($busqueda); ?>"
-                        placeholder="Nombre del producto"
+                        placeholder="Nombre, descripcion o categoria"
                     >
                 </div>
 
@@ -135,6 +186,17 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                             </option>
                         <?php endwhile; ?>
                     </select>
+                </div>
+
+                <div class="campo">
+                    <label for="ubicacion">Ubicacion o zona</label>
+                    <input
+                        type="text"
+                        id="ubicacion"
+                        name="ubicacion"
+                        value="<?php echo htmlspecialchars($ubicacion); ?>"
+                        placeholder="Ejemplo: Centro"
+                    >
                 </div>
 
                 <div class="campo">
@@ -172,7 +234,10 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
 
                 <div class="campo">
                     <label>&nbsp;</label>
-                    <button type="submit">Filtrar</button>
+                    <div class="acciones-filtros">
+                        <button type="submit">Filtrar</button>
+                        <a class="boton boton-secundario" href="productos.php">Limpiar</a>
+                    </div>
                 </div>
             </form>
 
@@ -194,17 +259,34 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                                 <p class="precio">$<?php echo number_format($producto["precio"], 2); ?></p>
                                 <span class="etiqueta"><?php echo htmlspecialchars($producto["categoria"]); ?></span>
                                 <span class="etiqueta"><?php echo htmlspecialchars($producto["estado"]); ?></span>
+                                <span class="etiqueta"><?php echo htmlspecialchars($producto["ubicacion"]); ?></span>
                                 <?php if ($producto["total_calificaciones"] > 0): ?>
-                                    <span class="etiqueta">Calificacion <?php echo number_format($producto["promedio_calificacion"], 1); ?>/5</span>
+                                    <div class="bloque-calificacion">
+                                        <?php echo renderizar_estrellas($producto["promedio_calificacion"]); ?>
+                                        <span class="texto-calificacion">
+                                            <?php echo number_format($producto["promedio_calificacion"], 1); ?>/5
+                                        </span>
+                                    </div>
                                 <?php else: ?>
                                     <span class="etiqueta">Sin calificaciones</span>
                                 <?php endif; ?>
                                 <p class="texto">
                                     Vendedor: <?php echo htmlspecialchars($producto["vendedor"]); ?>
                                 </p>
-                                <a class="boton" href="detalle.php?id=<?php echo $producto["id_producto"]; ?>">
-                                    Ver detalle
-                                </a>
+                                <div class="acciones-tarjeta">
+                                    <a class="boton" href="detalle.php?id=<?php echo $producto["id_producto"]; ?>">
+                                        Ver detalle
+                                    </a>
+
+                                    <?php if (isset($_SESSION["id_usuario"])): ?>
+                                        <form action="productos.php" method="POST">
+                                            <input type="hidden" name="id_producto" value="<?php echo $producto["id_producto"]; ?>">
+                                            <button type="submit" name="agregar_carrito">Agregar al carrito</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <a class="boton boton-secundario" href="login.php">Inicia sesion</a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </article>
                     <?php endwhile; ?>
@@ -223,5 +305,4 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
     <script src="js/script.js"></script>
 </body>
 </html>
-
 

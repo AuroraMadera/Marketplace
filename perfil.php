@@ -82,6 +82,7 @@ $productos = $consulta_productos->get_result();
                                 <th>Producto</th>
                                 <th>Categoria</th>
                                 <th>Precio</th>
+                                <th>Ubicacion</th>
                                 <th>Estado</th>
                                 <th>Disponible</th>
                                 <th>Acciones</th>
@@ -97,6 +98,7 @@ $productos = $consulta_productos->get_result();
                                     </td>
                                     <td><?php echo htmlspecialchars($producto["categoria"]); ?></td>
                                     <td>$<?php echo number_format($producto["precio"], 2); ?></td>
+                                    <td><?php echo htmlspecialchars($producto["ubicacion"]); ?></td>
                                     <td><?php echo htmlspecialchars($producto["estado"]); ?></td>
                                     <td>
                                         <?php echo $producto["disponible"] == 1 ? "Si" : "No"; ?>
@@ -135,4 +137,3 @@ $productos = $consulta_productos->get_result();
     <script src="js/script.js"></script>
 </body>
 </html>
-

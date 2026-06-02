@@ -36,11 +36,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
     $descripcion = trim($_POST["descripcion"]);
     $precio = $_POST["precio"];
+    $ubicacion = trim($_POST["ubicacion"]);
     $estado = $_POST["estado"];
     $disponible = isset($_POST["disponible"]) ? 1 : 0;
     $nombre_imagen = $producto["imagen"];
 
-    if (empty($id_categoria) || empty($nombre) || empty($descripcion) || empty($precio) || empty($estado)) {
+    if (empty($id_categoria) || empty($nombre) || empty($descripcion) || empty($precio) || empty($ubicacion) || empty($estado)) {
         $mensaje = "Todos los campos obligatorios deben completarse.";
     } elseif ($precio <= 0) {
         $mensaje = "El precio debe ser mayor que cero.";
@@ -69,15 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (empty($mensaje)) {
             $actualizar = $conexion->prepare(
                 "UPDATE productos
-                 SET id_categoria = ?, nombre = ?, descripcion = ?, precio = ?, estado = ?, imagen = ?, disponible = ?
+                 SET id_categoria = ?, nombre = ?, descripcion = ?, precio = ?, ubicacion = ?, estado = ?, imagen = ?, disponible = ?
                  WHERE id_producto = ? AND id_usuario = ?"
             );
             $actualizar->bind_param(
-                "issdssiii",
+                "issdsssiii",
                 $id_categoria,
                 $nombre,
                 $descripcion,
                 $precio,
+                $ubicacion,
                 $estado,
                 $nombre_imagen,
                 $disponible,
@@ -184,6 +186,17 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
                 </div>
 
                 <div class="campo">
+                    <label for="ubicacion">Ubicacion o zona</label>
+                    <input
+                        type="text"
+                        id="ubicacion"
+                        name="ubicacion"
+                        value="<?php echo htmlspecialchars($producto["ubicacion"]); ?>"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
                     <label for="estado">Estado</label>
                     <select id="estado" name="estado" required>
                         <option value="Nuevo" <?php if ($producto["estado"] == "Nuevo") echo "selected"; ?>>Nuevo</option>
@@ -225,5 +238,4 @@ $categorias = $conexion->query("SELECT id_categoria, nombre FROM categorias ORDE
     <script src="js/script.js"></script>
 </body>
 </html>
-
 

@@ -78,10 +78,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["guardar_comentario"]))
 }
 
 $consulta_producto = $conexion->prepare(
-    "SELECT productos.*, categorias.nombre AS categoria, usuarios.nombre AS vendedor, usuarios.telefono
+    "SELECT productos.*, categorias.nombre AS categoria, usuarios.nombre AS vendedor, usuarios.telefono,
+            calificaciones.promedio AS promedio_calificacion, calificaciones.total AS total_calificaciones
      FROM productos
      INNER JOIN categorias ON productos.id_categoria = categorias.id_categoria
      INNER JOIN usuarios ON productos.id_usuario = usuarios.id_usuario
+     LEFT JOIN (
+         SELECT id_producto, AVG(calificacion) AS promedio, COUNT(*) AS total
+         FROM comentarios
+         GROUP BY id_producto
+     ) AS calificaciones ON productos.id_producto = calificaciones.id_producto
      WHERE productos.id_producto = ? AND productos.disponible = 1"
 );
 $consulta_producto->bind_param("i", $id_producto);
@@ -164,6 +170,17 @@ $comentarios = $consulta_comentarios->get_result();
                 <p class="precio">$<?php echo number_format($producto["precio"], 2); ?></p>
                 <span class="etiqueta"><?php echo htmlspecialchars($producto["categoria"]); ?></span>
                 <span class="etiqueta"><?php echo htmlspecialchars($producto["estado"]); ?></span>
+                <span class="etiqueta"><?php echo htmlspecialchars($producto["ubicacion"]); ?></span>
+
+                <?php if ($producto["total_calificaciones"] > 0): ?>
+                    <div class="bloque-calificacion">
+                        <?php echo renderizar_estrellas($producto["promedio_calificacion"]); ?>
+                        <span class="texto-calificacion">
+                            <?php echo number_format($producto["promedio_calificacion"], 1); ?>/5
+                            (<?php echo $producto["total_calificaciones"]; ?> opiniones)
+                        </span>
+                    </div>
+                <?php endif; ?>
 
                 <p class="texto"><?php echo nl2br(htmlspecialchars($producto["descripcion"])); ?></p>
                 <p><strong>Vendedor:</strong> <?php echo htmlspecialchars($producto["vendedor"]); ?></p>
@@ -213,7 +230,10 @@ $comentarios = $consulta_comentarios->get_result();
                             <article class="tarjeta-producto">
                                 <div class="contenido-producto">
                                     <h3><?php echo htmlspecialchars($comentario["usuario"]); ?></h3>
-                                    <p class="precio"><?php echo $comentario["calificacion"]; ?>/5</p>
+                                    <div class="bloque-calificacion">
+                                        <?php echo renderizar_estrellas($comentario["calificacion"]); ?>
+                                        <span class="texto-calificacion"><?php echo $comentario["calificacion"]; ?>/5</span>
+                                    </div>
                                     <p class="texto"><?php echo nl2br(htmlspecialchars($comentario["comentario"])); ?></p>
                                 </div>
                             </article>
@@ -234,4 +254,3 @@ $comentarios = $consulta_comentarios->get_result();
     <script src="js/script.js"></script>
 </body>
 </html>
-

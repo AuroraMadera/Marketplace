@@ -198,6 +198,16 @@ input[type="submit"]:hover {
     padding: 12px;
 }
 
+.acciones-tarjeta {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.acciones-tarjeta form {
+    display: contents;
+}
+
 .contenido-producto h2,
 .contenido-producto h3 {
     font-size: 17px;
@@ -222,6 +232,34 @@ input[type="submit"]:hover {
     padding: 4px 8px;
 }
 
+.bloque-calificacion {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.estrellas {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.estrella {
+    color: #d1d5db;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.estrella.activa {
+    color: #f59e0b;
+}
+
+.texto-calificacion {
+    color: #4b5563;
+    font-size: 14px;
+}
+
 .filtros {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -231,6 +269,11 @@ input[type="submit"]:hover {
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     margin-top: 20px;
     padding: 16px;
+}
+
+.acciones-filtros {
+    display: grid;
+    gap: 8px;
 }
 
 .tabla {

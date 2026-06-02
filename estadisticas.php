@@ -6,6 +6,7 @@ $total_usuarios = $conexion->query("SELECT COUNT(*) AS total FROM usuarios")->fe
 $total_productos = $conexion->query("SELECT COUNT(*) AS total FROM productos")->fetch_assoc()["total"];
 $total_disponibles = $conexion->query("SELECT COUNT(*) AS total FROM productos WHERE disponible = 1")->fetch_assoc()["total"];
 $total_compras = $conexion->query("SELECT COUNT(*) AS total FROM compras")->fetch_assoc()["total"];
+$productos_carrito = $conexion->query("SELECT IFNULL(SUM(cantidad), 0) AS total FROM carrito")->fetch_assoc()["total"];
 $total_simulado = $conexion->query("SELECT IFNULL(SUM(total), 0) AS total FROM compras")->fetch_assoc()["total"];
 $promedio_calificacion = $conexion->query("SELECT IFNULL(AVG(calificacion), 0) AS promedio FROM comentarios")->fetch_assoc()["promedio"];
 
@@ -18,12 +19,21 @@ $productos_categoria = $conexion->query(
 );
 
 $productos_recientes = $conexion->query(
-    "SELECT productos.nombre, productos.precio, productos.estado, categorias.nombre AS categoria
+    "SELECT productos.nombre, productos.precio, productos.estado, productos.ubicacion, categorias.nombre AS categoria
      FROM productos
      INNER JOIN categorias ON productos.id_categoria = categorias.id_categoria
      ORDER BY productos.fecha_publicacion DESC
      LIMIT 5"
 );
+
+$producto_mejor_calificado = $conexion->query(
+    "SELECT productos.nombre, AVG(comentarios.calificacion) AS promedio, COUNT(comentarios.id_comentario) AS total_opiniones
+     FROM productos
+     INNER JOIN comentarios ON productos.id_producto = comentarios.id_producto
+     GROUP BY productos.id_producto, productos.nombre
+     ORDER BY promedio DESC, total_opiniones DESC, productos.nombre ASC
+     LIMIT 1"
+)->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -70,8 +80,28 @@ $productos_recientes = $conexion->query(
                 <article class="tarjeta-estadistica"><span>Productos</span><strong><?php echo $total_productos; ?></strong></article>
                 <article class="tarjeta-estadistica"><span>Disponibles</span><strong><?php echo $total_disponibles; ?></strong></article>
                 <article class="tarjeta-estadistica"><span>Compras simuladas</span><strong><?php echo $total_compras; ?></strong></article>
+                <article class="tarjeta-estadistica"><span>Productos en carrito</span><strong><?php echo $productos_carrito; ?></strong></article>
                 <article class="tarjeta-estadistica"><span>Total simulado</span><strong>$<?php echo number_format($total_simulado, 2); ?></strong></article>
                 <article class="tarjeta-estadistica"><span>Calificacion promedio</span><strong><?php echo number_format($promedio_calificacion, 1); ?>/5</strong></article>
+            </section>
+
+            <section class="seccion">
+                <h2 class="titulo">Producto mejor calificado</h2>
+
+                <div class="formulario">
+                    <?php if ($producto_mejor_calificado): ?>
+                        <p><strong><?php echo htmlspecialchars($producto_mejor_calificado["nombre"]); ?></strong></p>
+                        <div class="bloque-calificacion">
+                            <?php echo renderizar_estrellas($producto_mejor_calificado["promedio"]); ?>
+                            <span class="texto-calificacion">
+                                <?php echo number_format($producto_mejor_calificado["promedio"], 1); ?>/5
+                                con <?php echo $producto_mejor_calificado["total_opiniones"]; ?> opiniones
+                            </span>
+                        </div>
+                    <?php else: ?>
+                        <p class="texto">Todavia no hay productos con calificaciones registradas.</p>
+                    <?php endif; ?>
+                </div>
             </section>
 
             <section class="seccion">
@@ -95,13 +125,14 @@ $productos_recientes = $conexion->query(
                 <h2 class="titulo">Productos recientes</h2>
                 <table class="tabla">
                     <thead>
-                        <tr><th>Producto</th><th>Categoria</th><th>Estado</th><th>Precio</th></tr>
+                        <tr><th>Producto</th><th>Categoria</th><th>Ubicacion</th><th>Estado</th><th>Precio</th></tr>
                     </thead>
                     <tbody>
                         <?php while ($producto = $productos_recientes->fetch_assoc()): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($producto["nombre"]); ?></td>
                                 <td><?php echo htmlspecialchars($producto["categoria"]); ?></td>
+                                <td><?php echo htmlspecialchars($producto["ubicacion"]); ?></td>
                                 <td><?php echo htmlspecialchars($producto["estado"]); ?></td>
                                 <td>$<?php echo number_format($producto["precio"], 2); ?></td>
                             </tr>
@@ -120,4 +151,3 @@ $productos_recientes = $conexion->query(
     <script src="js/script.js"></script>
 </body>
 </html>
-

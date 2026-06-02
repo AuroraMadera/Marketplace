@@ -47,11 +47,11 @@ session_start();
                     <li>Registro de usuario probado.</li>
                     <li>Inicio y cierre de sesion probado.</li>
                     <li>Publicacion de producto con imagen probada.</li>
-                    <li>Catalogo, busqueda avanzada y filtros probados.</li>
+                    <li>Catalogo, busqueda avanzada y filtros por categoria, precio, ubicacion y estado probados.</li>
                     <li>Detalle de producto, comentarios y calificaciones probados.</li>
                     <li>Carrito simulado, eliminacion y compra simulada probados.</li>
                     <li>Perfil, edicion y eliminacion de productos propios probados.</li>
-                    <li>Panel de estadisticas probado.</li>
+                    <li>Panel de estadisticas, carrito acumulado y producto mejor calificado probados.</li>
                 </ul>
             </section>
 
@@ -61,7 +61,7 @@ session_start();
                     <li>Se corrigio la subida de imagenes creando automaticamente la carpeta de destino.</li>
                     <li>Se ajustaron imagenes cuadradas y tarjetas compactas del catalogo.</li>
                     <li>Se agregaron datos simulados para demostracion.</li>
-                    <li>Se agregaron calificaciones de ejemplo.</li>
+                    <li>Se agregaron calificaciones visuales y comentarios de ejemplo.</li>
                     <li>Se agrego panel de estadisticas.</li>
                     <li>Se integro JavaScript basico para confirmaciones y mensajes.</li>
                     <li>Se mantiene la aclaracion de que no hay pagos reales.</li>
@@ -78,4 +78,3 @@ session_start();
     <script src="js/script.js"></script>
 </body>
 </html>
-

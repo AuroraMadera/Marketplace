@@ -25,6 +25,7 @@ CREATE TABLE productos (
     nombre VARCHAR(120) NOT NULL,
     descripcion TEXT NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
+    ubicacion VARCHAR(120) NOT NULL,
     estado ENUM('Nuevo', 'Usado') NOT NULL,
     imagen VARCHAR(255),
     disponible TINYINT(1) DEFAULT 1,
@@ -98,13 +99,13 @@ INSERT INTO usuarios (nombre, correo, password, telefono) VALUES
 ('Carlos Perez', 'carlos.demo@marketplace.local', '$2y$10$NMGC8V8qQlMB34vlZFxMgOztJ95kVRQQyX.zNBA2j/F7h3ZJ7Ev.y', '9992223344'),
 ('Maria Gomez', 'maria.demo@marketplace.local', '$2y$10$NMGC8V8qQlMB34vlZFxMgOztJ95kVRQQyX.zNBA2j/F7h3ZJ7Ev.y', '9993334455');
 
-INSERT INTO productos (id_usuario, id_categoria, nombre, descripcion, precio, estado, imagen, disponible) VALUES
-(1, 1, 'Celular Samsung usado', 'Celular en buen estado, ideal para uso escolar y redes sociales.', 2800.00, 'Usado', '', 1),
-(2, 2, 'Chamarra azul', 'Chamarra casual talla mediana, poco uso.', 350.00, 'Usado', '', 1),
-(3, 4, 'Libro de programacion', 'Libro basico para aprender logica y fundamentos de programacion.', 180.00, 'Usado', '', 1),
-(1, 3, 'Lampara de escritorio', 'Lampara LED para estudio con luz blanca.', 220.00, 'Nuevo', '', 1),
-(2, 5, 'Balon de futbol', 'Balon numero 5 para entrenamiento.', 160.00, 'Nuevo', '', 1),
-(3, 7, 'Mochila escolar', 'Mochila resistente con varios compartimentos.', 420.00, 'Usado', '', 1);
+INSERT INTO productos (id_usuario, id_categoria, nombre, descripcion, precio, ubicacion, estado, imagen, disponible) VALUES
+(1, 1, 'Celular Samsung usado', 'Celular en buen estado, ideal para uso escolar y redes sociales.', 2800.00, 'Centro', 'Usado', '', 1),
+(2, 2, 'Chamarra azul', 'Chamarra casual talla mediana, poco uso.', 350.00, 'Norte', 'Usado', '', 1),
+(3, 4, 'Libro de programacion', 'Libro basico para aprender logica y fundamentos de programacion.', 180.00, 'Sur', 'Usado', '', 1),
+(1, 3, 'Lampara de escritorio', 'Lampara LED para estudio con luz blanca.', 220.00, 'Poniente', 'Nuevo', '', 1),
+(2, 5, 'Balon de futbol', 'Balon numero 5 para entrenamiento.', 160.00, 'Oriente', 'Nuevo', '', 1),
+(3, 7, 'Mochila escolar', 'Mochila resistente con varios compartimentos.', 420.00, 'Centro', 'Usado', '', 1);
 
 INSERT INTO comentarios (id_producto, id_usuario, comentario, calificacion) VALUES
 (1, 2, 'Producto publicado con buena descripcion y precio justo.', 5),
@@ -114,4 +115,3 @@ INSERT INTO comentarios (id_producto, id_usuario, comentario, calificacion) VALU
 (4, 2, 'Buena opcion para estudiar en casa.', 5),
 (5, 3, 'Precio accesible para estudiantes.', 4),
 (6, 1, 'La mochila tiene buena capacidad.', 4);
-

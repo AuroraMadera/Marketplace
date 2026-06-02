@@ -65,7 +65,7 @@ session_start();
                             <h3>Publica productos</h3>
                             <p class="texto">
                                 Los usuarios registrados pueden subir productos con imagen,
-                                categoria, precio y estado.
+                                categoria, precio, ubicacion y estado.
                             </p>
                         </div>
                     </article>
@@ -75,7 +75,7 @@ session_start();
                             <h3>Busca y filtra</h3>
                             <p class="texto">
                                 El catalogo permite encontrar productos por nombre, categoria,
-                                precio y estado.
+                                ubicacion, precio y estado.
                             </p>
                         </div>
                     </article>
@@ -102,4 +102,3 @@ session_start();
     <script src="js/script.js"></script>
 </body>
 </html>
-
